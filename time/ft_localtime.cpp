@@ -29,7 +29,7 @@ struct tm	*ft_localtime(time_t const *rawtime, int gmtoff = TZ_OFFSET, char cons
 	#if defined(__USE_MISC) || defined(__DARWIN_STRUCT_STAT64)
 		res->tm_hour = gmtoff;				// If supports timezones.
 		res->tm_gmtoff = 3600L * gmtoff;	// Seconds east of UTC.
-		res->tm_zone = tzname;				// Timezone abbreviation.
+		res->tm_zone = (char *)tzname;		// Timezone abbreviation.
 	#endif
 
 	if (*rawtime < 0)

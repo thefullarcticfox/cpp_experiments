@@ -14,18 +14,18 @@ struct tm	*ft_gmtime(time_t const *rawtime)
 {
 	struct tm	*res = new struct tm;
 
-	res->tm_sec = 0;			// Seconds.			[0-60] (1 leap second)
-	res->tm_min = 0;			// Minutes.			[0-59]
-	res->tm_hour = 0;			// Hours.			[0-23]
-	res->tm_mday = 0;			// Day.				[1-31]
-	res->tm_mon = 0;			// Month.			[0-11]
-	res->tm_year = 70;			// Year	- 1900.		[1970-...]
-	res->tm_wday = 4;			// Day of week.		[0-6]
-	res->tm_yday = 0;			// Days in year.	[0-365]
-	res->tm_isdst = 0;			// DST.				[-1/0/1]
+	res->tm_sec = 0;					// Seconds.			[0-60] (1 leap second)
+	res->tm_min = 0;					// Minutes.			[0-59]
+	res->tm_hour = 0;					// Hours.			[0-23]
+	res->tm_mday = 0;					// Day.				[1-31]
+	res->tm_mon = 0;					// Month.			[0-11]
+	res->tm_year = 70;					// Year	- 1900.		[1970-...]
+	res->tm_wday = 4;					// Day of week.		[0-6]
+	res->tm_yday = 0;					// Days in year.	[0-365]
+	res->tm_isdst = 0;					// DST.				[-1/0/1]
 	#if defined(__USE_MISC) || defined(__DARWIN_STRUCT_STAT64)
-		res->tm_gmtoff = 0;		// Seconds east of UTC.
-		res->tm_zone = "GMT";	// Timezone abbreviation.
+		res->tm_gmtoff = 0;				// Seconds east of UTC.
+		res->tm_zone = (char *)"GMT";	// Timezone abbreviation.
 	#endif
 
 	if (*rawtime < 0)
