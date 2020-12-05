@@ -80,10 +80,7 @@ struct tm	*ft_localtime(time_t const *rawtime, int gmtoff = TZ_OFFSET, char cons
 		if (month < 12 && datepart <= daysinmonth[month])
 		{
 			res->tm_mon = month;
-			if (datepart < daysinmonth[month])
-				res->tm_mday = datepart % daysinmonth[month];
-			else
-				res->tm_mday = datepart;
+			res->tm_mday = datepart;
 			res->tm_yday = yday + datepart - 1;
 			break ;
 		}

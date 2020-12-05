@@ -69,10 +69,7 @@ struct tm	*ft_gmtime(time_t const *rawtime)
 		if (month < 12 && datepart <= daysinmonth[month])
 		{
 			res->tm_mon = month;
-			if (datepart < daysinmonth[month])
-				res->tm_mday = datepart % daysinmonth[month];
-			else
-				res->tm_mday = datepart;
+			res->tm_mday = datepart;
 			res->tm_yday = yday + datepart - 1;
 			break ;
 		}
