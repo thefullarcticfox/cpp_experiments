@@ -4,6 +4,7 @@ OBJS		= $(SRCS:.cpp=.o)
 CC			= clang++
 CFLAGS		= -I. -g3 -Wall -Wextra -Werror
 EXEFLAGS	= $(CFLAGS) -lssl -lcrypto
+HEADERS		= serv.hpp
 SSLCERT		= ./test.crt ./test.key
 
 all:		$(NAME) $(SSLCERT)
