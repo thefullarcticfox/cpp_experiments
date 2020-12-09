@@ -24,14 +24,14 @@ std::string			ft_tostring(double val);
 std::string			ft_tostring(long double val);
 
 /* ft_stringto		*/
-int					ft_stoi(std::string str);
-long				ft_stol(std::string str);
-long long			ft_stoll(std::string str);
-unsigned int		ft_stou(std::string str);
-unsigned long		ft_stoul(std::string str);
-unsigned long long	ft_stoull(std::string str);
-float				ft_stof(std::string str);
-double				ft_stod(std::string str);
-long double			ft_stold(std::string str);
+int					ft_stoi(std::string const &str);
+long				ft_stol(std::string const &str);
+long long			ft_stoll(std::string const &str);
+unsigned int		ft_stou(std::string const &str);
+unsigned long		ft_stoul(std::string const &str);
+unsigned long long	ft_stoull(std::string const &str);
+float				ft_stof(std::string const &str);
+double				ft_stod(std::string const &str);
+long double			ft_stold(std::string const &str);
 
 #endif
