@@ -13,7 +13,7 @@
 #define TZ_OFFSET	3
 #define	TZ_NAME		"MSK"
 
-struct tm	*ft_localtime(time_t const *rawtime, int gmtoff = TZ_OFFSET, char const *tzname = TZ_NAME)
+struct tm	*ft_localtime(time_t const *rawtime)
 {
 	struct tm	*res = new struct tm;
 
@@ -27,9 +27,9 @@ struct tm	*ft_localtime(time_t const *rawtime, int gmtoff = TZ_OFFSET, char cons
 	res->tm_yday = 0;		// Days in year.	[0-365]
 	res->tm_isdst = 0;		// DST.				[-1/0/1]
 	#if defined(__USE_MISC) || defined(__DARWIN_STRUCT_STAT64)
-		res->tm_hour = gmtoff;				// If supports timezones.
-		res->tm_gmtoff = 3600L * gmtoff;	// Seconds east of UTC.
-		res->tm_zone = (char *)tzname;		// Timezone abbreviation.
+		res->tm_hour = TZ_OFFSET;				// If supports timezones.
+		res->tm_gmtoff = 3600L * TZ_OFFSET;		// Seconds east of UTC.
+		res->tm_zone = (char *)TZ_NAME;		// Timezone abbreviation.
 	#endif
 
 	if (*rawtime < 0)
