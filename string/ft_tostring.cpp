@@ -1,6 +1,6 @@
 /*
-**	ft_tostd::string
-**	just a c++98 compatible conversion of numbers
+**	ft_tostring
+**	just a c++98 compatible conversion of numbers to strings
 */
 
 #include <string>
