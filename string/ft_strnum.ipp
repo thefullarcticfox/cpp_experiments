@@ -1,3 +1,11 @@
+/*
+**	template versions of ft_stringto and ft_tostring
+**	just a c++98 compatible conversions
+**	Usage:
+**	string	str = ft_stringto_T(val);
+**	type	val = ft_tostring_T<type>(str);
+*/
+
 #ifndef FT_STRNUM_IPP
 #define FT_STRNUM_IPP
 
@@ -5,7 +13,7 @@
 #include <sstream>
 
 template <typename T>
-std::string	ft_numtostr(T val)
+std::string	ft_stringto_T(T val)
 {
 	std::ostringstream	oss;
 	oss << val;
@@ -13,7 +21,7 @@ std::string	ft_numtostr(T val)
 }
 
 template <typename T>
-T			ft_strtonum(std::string const &str)
+T			ft_tostring_T(std::string const &str)
 {
 	std::istringstream	iss(str);
 	T	val = 0;
