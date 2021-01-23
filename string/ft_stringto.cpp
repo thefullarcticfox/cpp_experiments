@@ -5,6 +5,7 @@
 
 #include <string>
 #include <sstream>
+#include <exception>
 
 int					ft_stoi(std::string const &str)
 {
@@ -12,7 +13,7 @@ int					ft_stoi(std::string const &str)
 	int					val = 0;
 
 	if (!(iss >> val))
-		return (0);
+		throw (std::out_of_range("stoi"));
 	return (val);
 }
 
@@ -22,7 +23,7 @@ long				ft_stol(std::string const &str)
 	long				val = 0;
 
 	if (!(iss >> val))
-		return (0L);
+		throw (std::out_of_range("stol"));
 	return (val);
 }
 
@@ -32,7 +33,7 @@ long long			ft_stoll(std::string const &str)
 	long long			val = 0;
 
 	if (!(iss >> val))
-		return (0LL);
+		throw (std::out_of_range("stoll"));
 	return (val);
 }
 
@@ -42,7 +43,7 @@ unsigned int		ft_stou(std::string const &str)
 	unsigned int		val = 0;
 
 	if (!(iss >> val))
-		return (0U);
+		throw (std::out_of_range("stou"));
 	return (val);
 }
 
@@ -52,7 +53,7 @@ unsigned long		ft_stoul(std::string const &str)
 	unsigned long		val = 0;
 
 	if (!(iss >> val))
-		return (0UL);
+		throw (std::out_of_range("stoul"));
 	return (val);
 }
 
@@ -62,7 +63,7 @@ unsigned long long	ft_stoull(std::string const &str)
 	unsigned long		val = 0;
 
 	if (!(iss >> val))
-		return (0ULL);
+		throw (std::out_of_range("stoull"));
 	return (val);
 }
 
@@ -72,7 +73,7 @@ float				ft_stof(std::string const &str)
 	float				val = 0;
 
 	if (!(iss >> val))
-		return (0.0F);
+		throw (std::out_of_range("stof"));
 	return (val);
 }
 
@@ -82,7 +83,7 @@ double				ft_stod(std::string const &str)
 	double				val = 0;
 
 	if (!(iss >> val))
-		return (0.0);
+		throw (std::out_of_range("stod"));
 	return (val);
 }
 
@@ -92,6 +93,6 @@ long double			ft_stold(std::string const &str)
 	long double			val = 0;
 
 	if (!(iss >> val))
-		return (0.0L);
+		throw (std::out_of_range("stold"));
 	return (val);
 }
