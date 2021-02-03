@@ -1,4 +1,5 @@
 #include "serv.hpp"
+#include <signal.h>
 
 /*
 **	simple nonblocking server for client server connection
@@ -10,6 +11,9 @@
 
 int		main(void)
 {
+	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
+		error_exit("signal error");
+
 	t_env	e;
 
 	e.port = 4422;
