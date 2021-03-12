@@ -69,10 +69,14 @@ unsigned long long	ft_stoull(std::string const &str)
 
 float				ft_stof(std::string const &str)
 {
-	std::istringstream	iss(str);
+	std::stringstream	iss;
+	if (str.size() > 0 && str.back() == 'f')
+		iss << str.substr(0, str.size() - 1);
+	else
+		iss << str;
 	float				val = 0;
 
-	if (!(iss >> val))
+	if (!(iss >> val))	//	this fails on macOS for some reason if string contains f
 		throw (std::out_of_range("stof"));
 	return (val);
 }
