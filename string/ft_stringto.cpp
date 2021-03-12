@@ -70,7 +70,7 @@ unsigned long long	ft_stoull(std::string const &str)
 float				ft_stof(std::string const &str)
 {
 	std::stringstream	iss;
-	if (str.size() > 0 && str.back() == 'f')
+	if (str.size() > 0 && str.at(str.size() - 1) == 'f')
 		iss << str.substr(0, str.size() - 1);
 	else
 		iss << str;
