@@ -1,2 +1,2 @@
 # cpp_experiments
-some of my cpp experiments to work with or use later maybe idk
+some c++ experiments with strings, time and unix sockets
