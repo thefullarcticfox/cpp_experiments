@@ -2,6 +2,7 @@
 #include <string>
 #include <exception>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 
 struct stats {
@@ -15,7 +16,7 @@ void	recursedirread(const std::string& path, const std::string& offset, stats& s
 	DIR*		dir = opendir(path.c_str());
 	std::string	fname;
 	if (!dir)
-		throw std::runtime_error("diropen error");
+		throw std::runtime_error(path + " [error opening dir]");
 
 	dirent*	entry = readdir(dir);
 	while (entry) {
@@ -24,15 +25,22 @@ void	recursedirread(const std::string& path, const std::string& offset, stats& s
 			std::string	nextdir(entry->d_name);
 			if (nextdir == "." || nextdir == "..") {
 				entry = readdir(dir);
+				if (!entry) {
+					closedir(dir);
+					return;
+				}
 				continue;
 			}
 			nextdir = path + "/" + nextdir;
 			entry = readdir(dir);
+			std::string tmp = "│   " + offset;
 			if (entry)
 				std::cout << offset << " " << fname << std::endl;
-			else
+			else {
+			//	tmp = "    " + offset;
 				std::cout << offset.substr(0, offset.size() - 9) << "└── " << fname << std::endl;
-			recursedirread(nextdir, "│   " + offset, s);
+			}
+			recursedirread(nextdir, tmp, s);
 			++s.dirs;
 			if (!entry) {
 				closedir(dir);
@@ -57,9 +65,14 @@ int		main(int ac, char** av) {
 		path = av[1];
 	if (path.empty())
 		path = "./";
-	std::cout << path << std::endl;
 	stats		s;
-	recursedirread(path, "├──", s);
+	std::cout << path << std::endl;
+	try {
+		recursedirread(path, "├──", s);
+	}
+	catch (const std::runtime_error& e) {
+		std::cerr << e.what() << std::endl;
+	}
 	std::cout << std::endl << s.dirs << " directories, " << s.files << " files" << std::endl;
 	return (0);
 }
