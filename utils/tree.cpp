@@ -38,7 +38,7 @@ void	recursedirread(const std::string& path, const std::string& offset, stats& s
 				std::cout << offset << " " << fname << std::endl;
 			else {
 			//	tmp = "    " + offset;
-				std::cout << offset.substr(0, offset.size() - 9) << "└── " << fname << std::endl;
+				std::cout << offset.substr(0, offset.rfind("├")) << "└── " << fname << std::endl;
 			}
 			recursedirread(nextdir, tmp, s);
 			++s.dirs;
@@ -54,7 +54,7 @@ void	recursedirread(const std::string& path, const std::string& offset, stats& s
 		std::cout << offset << " " << fname << std::endl;
 		++s.files;
 	}
-	std::cout << offset.substr(0, offset.size() - 9) << "└── " << fname << std::endl;
+	std::cout << offset.substr(0, offset.rfind("├")) << "└── " << fname << std::endl;
 	++s.files;
 	closedir(dir);
 }
