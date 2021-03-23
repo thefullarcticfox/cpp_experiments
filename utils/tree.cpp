@@ -2,7 +2,8 @@
 #include <string>
 #include <exception>
 #include <sys/types.h>
-#include <sys/stat.h>
+#include <algorithm>
+#include <vector>
 #include <dirent.h>
 
 struct stats {
@@ -14,49 +15,56 @@ struct stats {
 
 void	recursedirread(const std::string& path, const std::string& offset, stats& s) {
 	DIR*		dir = opendir(path.c_str());
-	std::string	fname;
 	if (!dir)
 		throw std::runtime_error(path + " [error opening dir]");
 
-	dirent*	entry = readdir(dir);
-	while (entry) {
-		fname = entry->d_name;
+	dirent*		entry = NULL;
+	std::vector<std::string>	dirnames;
+	std::vector<std::string>	filenames;
+	dirnames.reserve(200);
+	filenames.reserve(200);
+	while ((entry = readdir(dir))) {
+		std::string	name = entry->d_name;
 		if (entry->d_type == DT_DIR) {
-			std::string	nextdir(entry->d_name);
-			if (nextdir == "." || nextdir == "..") {
-				entry = readdir(dir);
-				if (!entry) {
-					closedir(dir);
-					return;
-				}
-				continue;
-			}
-			nextdir = path + "/" + nextdir;
-			entry = readdir(dir);
-			std::string tmp = "│   " + offset;
-			if (entry)
-				std::cout << offset << " " << fname << std::endl;
-			else {
-			//	tmp = "    " + offset;
-				std::cout << offset.substr(0, offset.rfind("├")) << "└── " << fname << std::endl;
-			}
-			recursedirread(nextdir, tmp, s);
-			++s.dirs;
-			if (!entry) {
-				closedir(dir);
-				return;
-			}
-			continue;
-		}
-		entry = readdir(dir);
-		if (!entry)
-			break;
-		std::cout << offset << " " << fname << std::endl;
-		++s.files;
+			if (name != "." && name != "..")
+				dirnames.push_back(name);
+		} else
+			filenames.push_back(name);
 	}
-	std::cout << offset.substr(0, offset.rfind("├")) << "└── " << fname << std::endl;
-	++s.files;
 	closedir(dir);
+
+	//	sorting
+	std::sort(dirnames.begin(), dirnames.end());
+	std::sort(filenames.begin(), filenames.end());
+
+	std::string	tmppath(path);
+	if (tmppath.rbegin() != tmppath.rend() && *(tmppath.rbegin()) == '/')
+		tmppath.resize(tmppath.size() - 1);
+
+	//	recurse in dirs
+	for (size_t i = 0; dirnames.size() > 0 && i < dirnames.size() - 1; i++) {
+		std::cout << offset << "├── " << dirnames[i] << std::endl;
+		recursedirread(tmppath + "/" + dirnames[i], offset + "│   ", s);
+	}
+	if (dirnames.size() > 0) {
+		if (filenames.size() > 0) {
+			std::cout << offset << "├── " << dirnames[dirnames.size() - 1] << std::endl;
+			recursedirread(tmppath + "/" + dirnames[dirnames.size() - 1], offset + "│   ", s);
+		} else {
+			std::cout << offset << "└── " << dirnames[dirnames.size() - 1] << std::endl;
+			recursedirread(tmppath + "/" + dirnames[dirnames.size() - 1], offset + "    ", s);
+		}
+	}
+
+	//	print files
+	for (size_t i = 0; filenames.size() > 0 && i < filenames.size() - 1; i++) {
+		std::cout << offset << "├── " << filenames[i] << std::endl;
+	}
+	if (filenames.size() > 0)
+		std::cout << offset << "└── " << filenames[filenames.size() - 1] << std::endl;
+
+	s.dirs += dirnames.size();
+	s.files += filenames.size();
 }
 
 int		main(int ac, char** av) {
@@ -68,7 +76,7 @@ int		main(int ac, char** av) {
 	stats		s;
 	std::cout << path << std::endl;
 	try {
-		recursedirread(path, "├──", s);
+		recursedirread(path, "", s);
 	}
 	catch (const std::runtime_error& e) {
 		std::cerr << e.what() << std::endl;
