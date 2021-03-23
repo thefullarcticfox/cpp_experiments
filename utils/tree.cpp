@@ -10,9 +10,10 @@
 #include <climits>
 
 struct s_stats {
-	size_t	dirs;
-	size_t	files;
-	s_stats() : dirs(0), files(0) {}
+	const bool	nodot;
+	size_t		dirs;
+	size_t		files;
+	s_stats(bool nodot = true) : nodot(nodot), dirs(0), files(0) {}
 	~s_stats() {}
 };
 
@@ -29,9 +30,9 @@ void	recursedirread(const std::string& path, const std::string& offset, s_stats&
 	while ((entry = readdir(dir))) {
 		std::string	name = entry->d_name;
 		if (entry->d_type == DT_DIR) {
-			if (name != "." && name != "..")
+			if (name != "." && name != ".." && !(s.nodot && name[0] == '.'))
 				dirnames.push_back(name);
-		} else
+		} else if (!(s.nodot && name[0] == '.'))
 			filenames.push_back(name);
 	}
 	closedir(dir);
@@ -67,16 +68,30 @@ void	recursedirread(const std::string& path, const std::string& offset, s_stats&
 }
 
 int		main(int ac, char** av) {
-	s_stats		s;
 	std::string	path;
-	if (ac > 1)
-		path = av[1];
+	bool		nodot = true;
+
+	for (int i = 1; i < ac; i++) {
+		std::string	arg(av[i]);
+		if (arg == "-a")
+			nodot = false;
+		else if (arg == "-h" || arg == "--help") {
+			std::cout << "usage: " << av[0] << " [-a] [-h|--help] [directory]" << std::endl <<
+				"  -a\t\tAll files are listed." << std::endl <<
+				"  -h|--help\tPrint usage and this help message and exit." << std::endl;
+			return (0);
+		}
+		else if (path.empty())
+			path = arg;
+	}
+
 	if (path.empty())
 		path = ".";
+	s_stats		s(nodot);
 
 	try {
 		struct	stat	c_stat;
-		if (stat(path.c_str(), &c_stat) == 0 && !S_ISDIR(c_stat.st_mode))
+		if (stat(path.c_str(), &c_stat) != 0 || !S_ISDIR(c_stat.st_mode))
 			throw std::runtime_error(path + " [error opening dir]");
 
 		char	resolved[4096];
