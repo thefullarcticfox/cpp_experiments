@@ -1,19 +1,22 @@
 #include <iostream>
 #include <string>
 #include <exception>
-#include <sys/types.h>
 #include <algorithm>
 #include <vector>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
+#include <cstdlib>
+#include <climits>
 
-struct stats {
+struct s_stats {
 	size_t	dirs;
 	size_t	files;
-	stats() : dirs(0), files(0) {}
-	~stats() {}
+	s_stats() : dirs(0), files(0) {}
+	~s_stats() {}
 };
 
-void	recursedirread(const std::string& path, const std::string& offset, stats& s) {
+void	recursedirread(const std::string& path, const std::string& offset, s_stats& s) {
 	DIR*		dir = opendir(path.c_str());
 	if (!dir)
 		throw std::runtime_error(path + " [error opening dir]");
@@ -37,45 +40,53 @@ void	recursedirread(const std::string& path, const std::string& offset, stats& s
 	std::sort(dirnames.begin(), dirnames.end());
 	std::sort(filenames.begin(), filenames.end());
 
-	std::string	tmppath(path);
-	if (tmppath.rbegin() != tmppath.rend() && *(tmppath.rbegin()) == '/')
-		tmppath.resize(tmppath.size() - 1);
-
 	//	recurse in dirs
 	for (size_t i = 0; dirnames.size() > 0 && i < dirnames.size() - 1; i++) {
 		std::cout << offset << "├── " << dirnames[i] << std::endl;
-		recursedirread(tmppath + "/" + dirnames[i], offset + "│   ", s);
+		recursedirread(path + "/" + dirnames[i], offset + "│   ", s);
 	}
 	if (dirnames.size() > 0) {
 		if (filenames.size() > 0) {
 			std::cout << offset << "├── " << dirnames[dirnames.size() - 1] << std::endl;
-			recursedirread(tmppath + "/" + dirnames[dirnames.size() - 1], offset + "│   ", s);
+			recursedirread(path + "/" + dirnames[dirnames.size() - 1], offset + "│   ", s);
 		} else {
 			std::cout << offset << "└── " << dirnames[dirnames.size() - 1] << std::endl;
-			recursedirread(tmppath + "/" + dirnames[dirnames.size() - 1], offset + "    ", s);
+			recursedirread(path + "/" + dirnames[dirnames.size() - 1], offset + "    ", s);
 		}
 	}
 
 	//	print files
-	for (size_t i = 0; filenames.size() > 0 && i < filenames.size() - 1; i++) {
+	for (size_t i = 0; filenames.size() > 0 && i < filenames.size() - 1; i++)
 		std::cout << offset << "├── " << filenames[i] << std::endl;
-	}
 	if (filenames.size() > 0)
 		std::cout << offset << "└── " << filenames[filenames.size() - 1] << std::endl;
 
+	//	stats update
 	s.dirs += dirnames.size();
 	s.files += filenames.size();
 }
 
 int		main(int ac, char** av) {
+	s_stats		s;
 	std::string	path;
 	if (ac > 1)
 		path = av[1];
 	if (path.empty())
-		path = "./";
-	stats		s;
-	std::cout << path << std::endl;
+		path = ".";
+
 	try {
+		struct	stat	c_stat;
+		if (stat(path.c_str(), &c_stat) == 0 && !S_ISDIR(c_stat.st_mode))
+			throw std::runtime_error(path + " [error opening dir]");
+
+		char	resolved[4096];
+		if (realpath(path.c_str(), resolved))
+			path = resolved;
+
+		size_t	lastnonslash = path.find_last_not_of('/');
+		if (lastnonslash != std::string::npos && lastnonslash != 0 && lastnonslash + 1 != path.size())
+			path.resize(lastnonslash + 1);
+		std::cout << path << std::endl;
 		recursedirread(path, "", s);
 	}
 	catch (const std::runtime_error& e) {
