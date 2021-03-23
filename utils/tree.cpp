@@ -84,7 +84,7 @@ int		main(int ac, char** av) {
 			path = resolved;
 
 		size_t	lastnonslash = path.find_last_not_of('/');
-		if (lastnonslash != std::string::npos && lastnonslash != 0 && lastnonslash + 1 != path.size())
+		if (lastnonslash != std::string::npos && lastnonslash + 1 != path.size())
 			path.resize(lastnonslash + 1);
 		std::cout << path << std::endl;
 		recursedirread(path, "", s);
