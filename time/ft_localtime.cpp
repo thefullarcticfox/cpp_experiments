@@ -1,5 +1,6 @@
 /*
-**	localtime function replacement (does not support dst timezones yet)
+**	localtime function replacement (does not support dst timezones)
+**	also assumes GMT+3 aka MSK timezone so it's valid after 2014
 **	made it in case i ever needed to convert from unix timestamp to tm struct
 **	compile with:
 **	clang++ -g -Wall -Wextra -Werror ft_localtime.cpp -o ft_localtime && ./ft_localtime
