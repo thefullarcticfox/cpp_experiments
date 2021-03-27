@@ -21,7 +21,7 @@ std::string	ft_stringto_T(T val)
 }
 
 template <typename T>
-T			ft_tostring_T(std::string const &str)
+T			ft_tostring_T(const std::string& str)
 {
 	std::istringstream	iss(str);
 	T	val = 0;

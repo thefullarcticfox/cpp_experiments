@@ -7,7 +7,7 @@
 #include <sstream>
 #include <exception>
 
-int					ft_stoi(std::string const &str)
+int					ft_stoi(const std::string& str)
 {
 	std::istringstream	iss(str);
 	int					val = 0;
@@ -17,7 +17,7 @@ int					ft_stoi(std::string const &str)
 	return (val);
 }
 
-long				ft_stol(std::string const &str)
+long				ft_stol(const std::string& str)
 {
 	std::istringstream	iss(str);
 	long				val = 0;
@@ -27,7 +27,7 @@ long				ft_stol(std::string const &str)
 	return (val);
 }
 
-long long			ft_stoll(std::string const &str)
+long long			ft_stoll(const std::string& str)
 {
 	std::istringstream	iss(str);
 	long long			val = 0;
@@ -37,7 +37,7 @@ long long			ft_stoll(std::string const &str)
 	return (val);
 }
 
-unsigned int		ft_stou(std::string const &str)
+unsigned int		ft_stou(const std::string& str)
 {
 	std::istringstream	iss(str);
 	unsigned int		val = 0;
@@ -47,7 +47,7 @@ unsigned int		ft_stou(std::string const &str)
 	return (val);
 }
 
-unsigned long		ft_stoul(std::string const &str)
+unsigned long		ft_stoul(const std::string& str)
 {
 	std::istringstream	iss(str);
 	unsigned long		val = 0;
@@ -57,7 +57,7 @@ unsigned long		ft_stoul(std::string const &str)
 	return (val);
 }
 
-unsigned long long	ft_stoull(std::string const &str)
+unsigned long long	ft_stoull(const std::string& str)
 {
 	std::istringstream	iss(str);
 	unsigned long		val = 0;
@@ -67,7 +67,7 @@ unsigned long long	ft_stoull(std::string const &str)
 	return (val);
 }
 
-float				ft_stof(std::string const &str)
+float				ft_stof(const std::string& str)
 {
 	std::stringstream	iss;
 	if (str.size() > 0 && str.at(str.size() - 1) == 'f')
@@ -81,7 +81,7 @@ float				ft_stof(std::string const &str)
 	return (val);
 }
 
-double				ft_stod(std::string const &str)
+double				ft_stod(const std::string& str)
 {
 	std::istringstream	iss(str);
 	double				val = 0;
@@ -91,7 +91,7 @@ double				ft_stod(std::string const &str)
 	return (val);
 }
 
-long double			ft_stold(std::string const &str)
+long double			ft_stold(const std::string& str)
 {
 	std::istringstream	iss(str);
 	long double			val = 0;

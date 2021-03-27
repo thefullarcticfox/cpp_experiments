@@ -5,7 +5,7 @@
 
 #include <string>
 
-bool	ft_match(std::string const &s1, std::string const &s2)
+bool	ft_match(const std::string& s1, const std::string& s2)
 {
 	if (s1[0] == '\0' && s2[0] == '*')
 		return (ft_match(s1, s2.substr(1)));

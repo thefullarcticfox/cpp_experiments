@@ -10,7 +10,7 @@
 
 typedef std::vector<std::string>	t_strvect;
 
-t_strvect	ft_splitstring(std::string str, std::string const &delim)
+t_strvect	ft_splitstring(std::string str, const std::string& delim)
 {
 	t_strvect		split;
 	size_t			pos = 0;
@@ -28,7 +28,7 @@ t_strvect	ft_splitstring(std::string str, std::string const &delim)
 	return (split);
 }
 
-t_strvect	ft_splitstringbyany(std::string str, std::string const &delim)
+t_strvect	ft_splitstringbyany(std::string str, const std::string& delim)
 {
 	t_strvect		split;
 	size_t			pos = 0;
