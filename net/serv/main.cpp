@@ -1,5 +1,6 @@
 #include "serv.hpp"
 #include <signal.h>
+#include <exception>
 
 /*
 **	simple nonblocking server for client server connection
@@ -12,7 +13,7 @@
 int		main(void)
 {
 	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
-		error_exit("signal error");
+		throw std::runtime_error("signal error");
 
 	t_env	e;
 

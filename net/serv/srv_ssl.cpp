@@ -1,6 +1,6 @@
 #include "serv.hpp"
 
-int		ssl_errorcallback(const char *str, size_t len, void *u)
+int		ssl_errorcallback(const char* str, size_t len, void* u)
 {
 	(void)u;
 	(void)len;
@@ -8,7 +8,7 @@ int		ssl_errorcallback(const char *str, size_t len, void *u)
 	return (1);
 }
 
-void	srv_initsslctx(t_env *e)
+void	srv_initsslctx(t_env* e)
 {
 	SSL_library_init();
 	SSL_load_error_strings();
@@ -35,7 +35,7 @@ void	srv_initsslctx(t_env *e)
 	}
 }
 
-void	cli_handshake(t_env *e, int cs)
+void	cli_handshake(t_env* e, int cs)
 {
 	int		handshake = SSL_accept(e->fds[cs].sslptr);
 

@@ -38,7 +38,7 @@ typedef struct	s_fd
 	int			fd;
 	int			type;
 	bool		isSSL;
-	SSL			*sslptr;
+	SSL*		sslptr;
 	string		buf_read;
 	string		buf_write;
 }				t_fd;
@@ -51,18 +51,18 @@ typedef struct	s_env
 	t_fdmap		fds;
 	int			port;
 	int			sslport;
-	SSL_CTX		*sslctx;
+	SSL_CTX*	sslctx;
 	fd_set		fd_read;
 	fd_set		fd_write;
 	fd_set		fd_error;
 }				t_env;
 
-void			srv_initsslctx(t_env *e);
-void			srv_create(t_env *e, int port, bool isSSL = false);
-void			srv_accept(t_env *e, int s, bool isSSL = false);
-void			cli_handshake(t_env *e, int cs);
-void			cli_recv(t_env *e, int cs, bool isSSL = false);
-void			cli_send(t_env *e, int cs, bool isSSL = false);
-int				ssl_errorcallback(const char *str, size_t len, void *u);
+void			srv_initsslctx(t_env* e);
+void			srv_create(t_env* e, int port, bool isSSL = false);
+void			srv_accept(t_env* e, int s, bool isSSL = false);
+void			cli_handshake(t_env* e, int cs);
+void			cli_recv(t_env* e, int cs, bool isSSL = false);
+void			cli_send(t_env* e, int cs, bool isSSL = false);
+int				ssl_errorcallback(const char* str, size_t len, void* u);
 
 #endif

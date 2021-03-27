@@ -1,10 +1,11 @@
 #include "serv.hpp"
+#include <sstream>
 
-void	srv_create(t_env *e, int port, bool isSSL)
+void	srv_create(t_env* e, int port, bool isSSL)
 {
 	int				s;
 	t_sockaddr_in	sin;
-	t_protoent		*pe;
+	t_protoent*		pe;
 	t_fd			server;
 	int				optval = 1;
 
@@ -51,7 +52,17 @@ void	srv_create(t_env *e, int port, bool isSSL)
 	e->fds[s] = server;
 }
 
-void	srv_accept(t_env *e, int s, bool isSSL)
+void	send_all(t_env* e, int cs, const string& msg)
+{
+	ostringstream	oss;
+	oss << "Client " << cs << " " << msg;
+
+	for (t_fdmapit i = e->fds.begin(); i != e->fds.end(); i++)
+		if ((i->second.type == FD_CLIENT) && (i->first != cs))
+			i->second.buf_write += oss.str();
+}
+
+void	srv_accept(t_env* e, int s, bool isSSL)
 {
 	int				cs;
 	t_sockaddr_in	csin;
@@ -78,6 +89,8 @@ void	srv_accept(t_env *e, int s, bool isSSL)
 	client.isSSL = isSSL;
 	e->fds[cs] = client;
 
+	send_all(e, cs, "connected\n");
+
 	if (isSSL)
 	{
 		if (!(e->fds[cs].sslptr = SSL_new(e->sslctx)))
@@ -93,7 +106,7 @@ void	srv_accept(t_env *e, int s, bool isSSL)
 	}
 }
 
-void	cli_recv(t_env *e, int cs, bool isSSL)
+void	cli_recv(t_env* e, int cs, bool isSSL)
 {
 	ssize_t		r;
 	char		buf_read[BUF_SIZE + 1];
@@ -110,11 +123,7 @@ void	cli_recv(t_env *e, int cs, bool isSSL)
 		if (e->fds[cs].buf_read[e->fds[cs].buf_read.length() - 1] == '\n')
 		{
 			cout << "Client " << cs << " sent " << e->fds[cs].buf_read;
-			e->fds[cs].buf_write = "message recieved\n";
-			for (t_fdmapit i = e->fds.begin(); i != e->fds.end(); i++)
-				if ((i->second.type == FD_CLIENT) && (i->first != cs))
-					i->second.buf_write = "Client " + std::to_string(cs) +
-					" sent: " + e->fds[cs].buf_read;
+			send_all(e, cs, "sent: " + e->fds[cs].buf_read);
 			e->fds[cs].buf_read.erase();
 		}
 	}
@@ -135,11 +144,12 @@ void	cli_recv(t_env *e, int cs, bool isSSL)
 		FD_CLR(cs, &(e->fd_write));
 		FD_CLR(cs, &(e->fd_error));
 		e->fds.erase(cs);
+		send_all(e, cs, "disconnected\n");
 		cout << "Client " << cs << " disconnected" << endl;
 	}
 }
 
-void	cli_send(t_env *e, int cs, bool isSSL)
+void	cli_send(t_env* e, int cs, bool isSSL)
 {
 	ssize_t		r;
 
@@ -165,6 +175,7 @@ void	cli_send(t_env *e, int cs, bool isSSL)
 		FD_CLR(cs, &(e->fd_write));
 		FD_CLR(cs, &(e->fd_error));
 		e->fds.erase(cs);
+		send_all(e, cs, "disconnected\n");
 		cout << "Client " << cs << " disconnected" << endl;
 	}
 }
