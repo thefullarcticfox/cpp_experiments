@@ -10,22 +10,22 @@
 #include <sstream>
 #include <ctime>	// time_t, struct tm, gmtime, strftime
 
-struct tm	*ft_gmtime(time_t const *rawtime)
+struct tm*	ft_gmtime(const time_t* rawtime)
 {
-	struct tm	*res = new struct tm;
+	struct tm*	res = new struct tm;
 
 	res->tm_sec = 0;					// Seconds.			[0-60] (1 leap second)
 	res->tm_min = 0;					// Minutes.			[0-59]
 	res->tm_hour = 0;					// Hours.			[0-23]
-	res->tm_mday = 0;					// Day.				[1-31]
+	res->tm_mday = 1;					// Day.				[1-31]
 	res->tm_mon = 0;					// Month.			[0-11]
 	res->tm_year = 70;					// Year	- 1900.		[1970-...]
-	res->tm_wday = 4;					// Day of week.		[0-6]
+	res->tm_wday = 0;					// Day of week.		[0-6]
 	res->tm_yday = 0;					// Days in year.	[0-365]
 	res->tm_isdst = 0;					// DST.				[-1/0/1]
 	#if defined(__USE_MISC) || defined(__DARWIN_STRUCT_STAT64)
 		res->tm_gmtoff = 0;				// Seconds east of UTC.
-		res->tm_zone = (char *)"GMT";	// Timezone abbreviation.
+		res->tm_zone = "GMT";			// Timezone abbreviation.
 	#endif
 
 	if (*rawtime < 0)
@@ -40,7 +40,7 @@ struct tm	*ft_gmtime(time_t const *rawtime)
 	res->tm_hour += timepart;
 	res->tm_hour %= 24;
 
-	res->tm_wday = (datepart + 4) % 7;
+	res->tm_wday += (datepart + 4) % 7;
 	int	daysinmonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	while (datepart > 0)
 	{
@@ -50,39 +50,34 @@ struct tm	*ft_gmtime(time_t const *rawtime)
 			else if (year is not divisible by 400) then (it is a common year)
 			else (it is a leap year)
 		*/
-		if (res->tm_year % 4 != 0)
-			daysinmonth[1] = 28;
-		else if (res->tm_year % 100 != 0)
-			daysinmonth[1] = 29;
-		else if (res->tm_year % 400 != 0)
-			daysinmonth[1] = 28;
-		else
+		daysinmonth[1] = 28;
+		int	year = res->tm_year + 1900;
+		if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
 			daysinmonth[1] = 29;
 
 		int yday = 0;
 		int month = -1;
-		while (++month < 12 && daysinmonth[month] < datepart)
+		while (++month < 12 && daysinmonth[month] <= datepart)
 		{
 			yday += daysinmonth[month];
 			datepart -= daysinmonth[month];
 		}
 		if (month < 12 && datepart <= daysinmonth[month])
 		{
-			res->tm_mon = month;
-			res->tm_mday = datepart;
-			res->tm_yday = yday + datepart - 1;
+			res->tm_mon += month;
+			res->tm_mday += datepart;
+			res->tm_yday += yday + datepart;
 			break ;
 		}
 		res->tm_year++;
 	}
-
 	return (res);
 }
 
 int			main(void)
 {
 	time_t	rawtime = time(NULL);
-	while (rawtime > 0 && rawtime < 1777777777)
+	while (rawtime >= 0 && rawtime < 17777777777)
 	{
 		char		str1[100], str2[100];
 		struct tm	*res1, *res2;
@@ -110,7 +105,7 @@ int			main(void)
 				ss1.str() << std::endl << ss2.str() << std::endl;
 			return (1);
 		}
-		rawtime += 123;
+		rawtime += 6000;
 		std::cout << "-------------------------------" << std::endl;
 	}
 

@@ -3,7 +3,7 @@
 
 #include <ctime>	// time_t, struct tm
 
-struct tm	*ft_gmtime(time_t const *rawtime);
-struct tm	*ft_localtime(time_t const *rawtime);
+struct tm*	ft_gmtime(const time_t* rawtime);
+struct tm*	ft_localtime(const time_t* rawtime);
 
 #endif
