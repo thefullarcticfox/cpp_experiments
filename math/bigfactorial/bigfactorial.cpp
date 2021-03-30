@@ -8,10 +8,7 @@
 */
 
 #include <iostream>
-#include <string>
-#include <limits>
 #include <vector>
-#include <stdexcept>
 using uint = unsigned int;
 
 std::vector<uint>	bigfactorial(const uint factorial, const uint base) {
