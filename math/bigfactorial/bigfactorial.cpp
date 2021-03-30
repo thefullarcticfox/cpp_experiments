@@ -1,8 +1,8 @@
 /*
 **	Compile:	clang++ -g -Wall -Wextra -Werror -std=c++11 bigfactorial.cpp
 **	Run:		./a.out <factorial> <base>
-**	Default factorial is 35:	if not passed or value < 0 or value > 1000
-**	Default base is 10:			if not passed or value < 2 or > 1000
+**	Default factorial is 35:	if not passed || val < 0 || val > 1000
+**	Default base is 10:			if not passed || val < 2 || val > 1000
 **	*** Reference material ***
 **	https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic
 */
