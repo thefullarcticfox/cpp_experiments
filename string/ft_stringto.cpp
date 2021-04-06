@@ -5,6 +5,7 @@
 
 #include <string>
 #include <sstream>
+#include <limits>
 #include <exception>
 
 int					ft_stoi(const std::string& str)
@@ -69,6 +70,15 @@ unsigned long long	ft_stoull(const std::string& str)
 
 float				ft_stof(const std::string& str)
 {
+	if (str.find("-nan") == 0)
+		return (-std::numeric_limits<float>::quiet_NaN());
+	if (str.find("nan") == 0 || str.find("+nan") == 0)
+		return (std::numeric_limits<float>::quiet_NaN());
+	if (str.find("-inf") == 0)
+		return (-std::numeric_limits<float>::infinity());
+	if (str.find("inf") == 0 || str.find("+inf") == 0)
+		return (std::numeric_limits<float>::infinity());
+
 	std::stringstream	iss;
 	if (str.size() > 0 && str.at(str.size() - 1) == 'f')
 		iss << str.substr(0, str.size() - 1);
@@ -77,26 +87,44 @@ float				ft_stof(const std::string& str)
 	float				val = 0;
 
 	if (!(iss >> val))	//	this fails on macOS for some reason if string contains f
-		throw (std::out_of_range("stof"));
+		throw (std::invalid_argument("stof"));
 	return (val);
 }
 
 double				ft_stod(const std::string& str)
 {
+	if (str.find("-nan") == 0)
+		return (-std::numeric_limits<double>::quiet_NaN());
+	if (str.find("nan") == 0 || str.find("+nan") == 0)
+		return (std::numeric_limits<double>::quiet_NaN());
+	if (str.find("-inf") == 0)
+		return (-std::numeric_limits<double>::infinity());
+	if (str.find("inf") == 0 || str.find("+inf") == 0)
+		return (std::numeric_limits<double>::infinity());
+
 	std::istringstream	iss(str);
 	double				val = 0;
 
 	if (!(iss >> val))
-		throw (std::out_of_range("stod"));
+		throw (std::invalid_argument("stod"));
 	return (val);
 }
 
 long double			ft_stold(const std::string& str)
 {
+	if (str.find("-nan") == 0)
+		return (-std::numeric_limits<long double>::quiet_NaN());
+	if (str.find("nan") == 0 || str.find("+nan") == 0)
+		return (std::numeric_limits<long double>::quiet_NaN());
+	if (str.find("-inf") == 0)
+		return (-std::numeric_limits<long double>::infinity());
+	if (str.find("inf") == 0 || str.find("+inf") == 0)
+		return (std::numeric_limits<long double>::infinity());
+
 	std::istringstream	iss(str);
 	long double			val = 0;
 
 	if (!(iss >> val))
-		throw (std::out_of_range("stold"));
+		throw (std::invalid_argument("stold"));
 	return (val);
 }
