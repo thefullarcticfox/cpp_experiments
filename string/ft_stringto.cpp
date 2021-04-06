@@ -79,14 +79,11 @@ float				ft_stof(const std::string& str)
 	if (str.find("inf") == 0 || str.find("+inf") == 0)
 		return (std::numeric_limits<float>::infinity());
 
-	std::stringstream	iss;
-	if (str.size() > 0 && str.at(str.size() - 1) == 'f')
-		iss << str.substr(0, str.size() - 1);
-	else
-		iss << str;
+	std::istringstream	iss(str);
 	float				val = 0;
 
-	if (!(iss >> val))	//	this fails on macOS for some reason if string contains f
+	//	this will fail on macOS if string contains letters after the number
+	if (!(iss >> val))
 		throw (std::invalid_argument("stof"));
 	return (val);
 }
